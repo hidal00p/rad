@@ -1,6 +1,11 @@
 use std::ops::{Add, Div, Mul, Sub};
 
-#[derive(Debug)]
+/*
+ * A wrapper around a numerical value, which
+ * performs a derivative computation in the tangent mode.
+ */
+
+#[derive(Debug, Clone, Copy)]
 pub struct Value {
     pub value: f32,
     pub der: f32,
