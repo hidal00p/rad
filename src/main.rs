@@ -2,11 +2,12 @@ mod value;
 
 use value::Value;
 
-fn f(mut x: Value) -> Value {
-    let mut a = Value::new(3.0, 0.0);
-    let mut b = Value::new(2.0, 0.0);
+fn f(x: Value) -> Value {
+    let a = Value::new(3.0, 0.0); // Passive variable
+    let b = Value::new(2.0, 0.0); // Passive variable
 
-    (&mut a)*(&mut (x*x)) + (&mut b) / (&mut x)
+    // purely copying
+    a * x * x + b / x
 }
 
 fn main() {
@@ -18,7 +19,7 @@ fn main() {
      * dfdx(x = 2.0) = 11.5
      */
 
-    let x = Value::new(2.0, 1.0);
+    let x = Value::new(2.0, 1.0); // Active variable
     let y = f(x);
 
     assert_eq!(y.value, 13.0);

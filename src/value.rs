@@ -78,6 +78,7 @@ impl Div for Value {
     type Output = Value;
 
     fn div(self, mut rhs: Value) -> Self::Output {
+        rhs.der = -rhs.der / rhs.value / rhs.value;
         rhs.value = 1.0 / rhs.value;
         self * rhs
     }
