@@ -1,19 +1,26 @@
 mod value;
 
-use crate::value::Value;
+use value::Value;
 
-fn f1(x0: &mut Value, x1: &mut Value) -> Value {
-    x0 * x1
-}
+fn f(mut x: Value) -> Value {
+    let mut a = Value::new(3.0, 0.0);
+    let mut b = Value::new(2.0, 0.0);
 
-fn f2(x0: &mut Value, x1: &mut Value) -> Value {
-    x0 / x1
+    (&mut a)*(&mut (x*x)) + (&mut b) / (&mut x)
 }
 
 fn main() {
-    let mut a: Value = Value::new(2.0, 0.0);
-    let mut b: Value = Value::new(3.0, 1.0);
+    /*
+     * Derivative of f(x) = 3*x^2 + 2/x
+     * at x = 2.0.
+     *
+     * f(x = 2.0) = 13.0
+     * dfdx(x = 2.0) = 11.5
+     */
 
-    println!("{:?}", f1(&mut a, &mut b));
-    println!("{:?}", f2(&mut a, &mut b));
+    let x = Value::new(2.0, 1.0);
+    let y = f(x);
+
+    assert_eq!(y.value, 13.0);
+    assert_eq!(y.der, 11.5);
 }
