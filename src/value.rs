@@ -93,3 +93,27 @@ impl Div<&mut Value> for &mut Value {
         self * rhs
     }
 }
+
+#[cfg(test)]
+mod test{
+    use super::*;
+
+    fn f(x: Value) -> Value {
+        // Test frunction:
+        //  f(x)     = 0.5 * x^3 + 1 / x
+        //  df/dx    = 1.5 x^2 - 1 / x^2
+        let a = Value::new(0.5, 0.0);
+        let b = Value::new(1.0, 0.0);
+
+        a * x * x * x + b / x
+    }
+
+    #[test]
+    fn test_derivative() {
+        let x = Value::new(2.0, 1.0); // x = 2, dx/dx = 1
+        let y = f(x);
+
+        assert_eq!(y.value, 4.5);
+        assert_eq!(y.der, 5.75);
+    }
+}
