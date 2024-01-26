@@ -1,5 +1,5 @@
 use derivative::Derivative;
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /*
  * A wrapper around a numerical value, which
@@ -117,6 +117,16 @@ impl Div<&mut Value> for &mut Value {
     }
 }
 
+impl Neg for Value {
+    type Output = Value;
+
+    fn neg(self) -> Self::Output {
+        let value = -self.value;
+        let der = -self.der;
+        Value { value, der }
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -127,6 +137,14 @@ mod test {
 
         assert_eq!(x.value, 5.0);
         assert_eq!(x.der, 0.0);
+    }
+
+    #[test]
+    fn test_neg() {
+        let x = -Value::new(1.0, 2.0);
+
+        assert_eq!(x.value, -1.0);
+        assert_eq!(x.der, -2.0);
     }
 
     #[test]
