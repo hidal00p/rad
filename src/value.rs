@@ -121,20 +121,53 @@ mod test {
         assert_eq!(x.der, 0.0);
     }
 
-    fn f(x: Value) -> Value {
-        // Test frunction:
-        //  f(x)     = 0.5 * x^3 + 1 / x
-        //  df/dx    = 1.5 x^2 - 1 / x^2
+    fn f1(x: Value) -> Value {
+        // f1(x)    = 2 * x^3
+        // df1/dx   = 6 * x^2
+        let a = Value::new(2.0, Default::default());
+
+        a * x.pow(3.0)
+    }
+
+    fn f2(x: Value) -> Value {
+        // f2(x)    = 2 / x^0.5
+        // df2/dx   = -1 / x^1.5
+        let a = Value::new(2.0, Default::default());
+
+        a / x.sqrt()
+    }
+
+    fn f3(x: Value) -> Value {
+        // f(x)     = 0.5 * x^3 + 1 / x
+        // df3/dx   = 1.5 * x^2 - 1 / x^2
         let a = Value::new(0.5, Default::default());
         let b = Value::new(1.0, Default::default());
 
-        a * x * x * x + b / x
+        a * x.pow(3.0) + b / x
     }
 
     #[test]
-    fn test_derivative() {
-        let x = Value::new(2.0, 1.0); // x = 2, dx/dx = 1
-        let y = f(x);
+    fn test_derivative1() {
+        let x = Value::new(2.0, 1.0); 
+        let y = f1(x);
+
+        assert_eq!(y.value, 16.0);
+        assert_eq!(y.der, 24.0);
+    }
+
+    #[test]
+    fn test_derivative2() {
+        let x = Value::new(4.0, 1.0);
+        let y = f2(x);
+
+        assert_eq!(y.value, 1.0);
+        assert_eq!(y.der, -0.125);
+    }
+
+    #[test]
+    fn test_derivative3() {
+        let x = Value::new(2.0, 1.0);
+        let y = f3(x);
 
         assert_eq!(y.value, 4.5);
         assert_eq!(y.der, 5.75);
