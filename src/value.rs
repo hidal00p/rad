@@ -30,6 +30,14 @@ impl Value {
         let der = 0.5 * self.value.powf(-0.5) * self.der;
         Value { value, der }
     }
+
+    pub fn relu(self) -> Self {
+        if self.value > 0.0 {
+            self
+        } else {
+            Value::new(0.0, 0.0)
+        }
+    }
 }
 
 impl Add for Value {
@@ -139,6 +147,33 @@ mod test {
 
         assert_eq!(y.value, z.value);
         assert_eq!(y.der, z.der);
+    }
+
+    #[test]
+    fn test_pos_relu_operator() {
+        let x = Value::new(1.5, 2.5);
+        let y = x.relu();
+
+        assert_eq!(y.value, x.value);
+        assert_eq!(y.der, x.der);
+    }
+
+    #[test]
+    fn test_neg_relu_operator() {
+        let x = Value::new(-1.5, 2.5);
+        let y = x.relu();
+
+        assert_eq!(y.value, 0.0);
+        assert_eq!(y.der, 0.0);
+    }
+
+    #[test]
+    fn test_zero_relu_operator() {
+        let x = Value::new(0.0, 2.5);
+        let y = x.relu();
+
+        assert_eq!(y.value, 0.0);
+        assert_eq!(y.der, 0.0);
     }
 
     fn f1(x: Value) -> Value {
