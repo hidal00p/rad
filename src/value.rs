@@ -120,6 +120,16 @@ mod test {
         assert_eq!(x.value, 5.0);
         assert_eq!(x.der, 0.0);
     }
+    
+    #[test]
+    fn test_pow_operator() {
+        let x = Value::new(3.0, 4.0);
+        let y = x.pow(3.0);
+        let z = x * x * x;
+
+        assert_eq!(y.value, z.value);
+        assert_eq!(y.der, z.der);
+    }
 
     fn f1(x: Value) -> Value {
         // f1(x)    = 2 * x^3
