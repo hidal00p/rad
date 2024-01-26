@@ -18,6 +18,18 @@ impl Value {
     pub fn new(value: f32, der: f32) -> Self {
         Value { value, der }
     }
+
+    pub fn pow(self, exp: f32) -> Self {
+        let value = self.value.powf(exp);
+        let der = exp * self.value.powf(exp - 1.0) * self.der;
+        Value { value, der }
+    }
+
+    pub fn sqrt(self) -> Self {
+        let value = self.value.sqrt();
+        let der = 0.5 * self.value.powf(-0.5) * self.der;
+        Value { value, der }
+    }
 }
 
 impl Add for Value {
