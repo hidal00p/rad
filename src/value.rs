@@ -1,3 +1,4 @@
+use derivative::Derivative;
 use std::ops::{Add, Div, Mul, Sub};
 
 /*
@@ -5,9 +6,11 @@ use std::ops::{Add, Div, Mul, Sub};
  * performs a derivative computation in the tangent mode.
  */
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Derivative)]
+#[derivative(Debug, Clone, Copy, Default)]
 pub struct Value {
     pub value: f32,
+    #[derivative(Default(value = "0.0"))]
     pub der: f32,
 }
 
@@ -95,15 +98,23 @@ impl Div<&mut Value> for &mut Value {
 }
 
 #[cfg(test)]
-mod test{
+mod test {
     use super::*;
+
+    #[test]
+    fn test_default_value() {
+        let x = Value::new(5.0, Default::default());
+
+        assert_eq!(x.value, 5.0);
+        assert_eq!(x.der, 0.0);
+    }
 
     fn f(x: Value) -> Value {
         // Test frunction:
         //  f(x)     = 0.5 * x^3 + 1 / x
         //  df/dx    = 1.5 x^2 - 1 / x^2
-        let a = Value::new(0.5, 0.0);
-        let b = Value::new(1.0, 0.0);
+        let a = Value::new(0.5, Default::default());
+        let b = Value::new(1.0, Default::default());
 
         a * x * x * x + b / x
     }
