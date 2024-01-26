@@ -120,12 +120,22 @@ mod test {
         assert_eq!(x.value, 5.0);
         assert_eq!(x.der, 0.0);
     }
-    
+
     #[test]
     fn test_pow_operator() {
         let x = Value::new(3.0, 4.0);
         let y = x.pow(3.0);
         let z = x * x * x;
+
+        assert_eq!(y.value, z.value);
+        assert_eq!(y.der, z.der);
+    }
+
+    #[test]
+    fn test_sqrt_operator() {
+        let x = Value::new(1.5, 2.5);
+        let y = x.sqrt();
+        let z = x.pow(0.5);
 
         assert_eq!(y.value, z.value);
         assert_eq!(y.der, z.der);
@@ -158,7 +168,7 @@ mod test {
 
     #[test]
     fn test_derivative1() {
-        let x = Value::new(2.0, 1.0); 
+        let x = Value::new(2.0, 1.0);
         let y = f1(x);
 
         assert_eq!(y.value, 16.0);
