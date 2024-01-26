@@ -8,3 +8,4 @@ edition = "2021"
 members = ["."]
 
 [dependencies]
+derivative = "2.2.0"
