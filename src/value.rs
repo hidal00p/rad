@@ -1,4 +1,4 @@
-use derivative::Derivative;
+use std::default::Default;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /*
@@ -6,11 +6,9 @@ use std::ops::{Add, Div, Mul, Neg, Sub};
  * performs a derivative computation in the tangent mode.
  */
 
-#[derive(Derivative)]
-#[derivative(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct Value {
     pub value: f32,
-    #[derivative(Default(value = "0.0"))]
     pub der: f32,
 }
 
@@ -245,7 +243,7 @@ mod test {
         assert_eq!(y.value, 127.0);
         assert_eq!(y.der, 96.125);
     }
-    
+
     #[test]
     fn test_differentiate_product() {
         // f3(x)    = f1(x) * f2(x) = 4 * x^2.5
@@ -260,8 +258,8 @@ mod test {
     #[test]
     fn test_differentiate_chain() {
         // f4(x)    = f1(f2(x)) = 2 * ( 2 / x^-0.5 )^3
-        //          = 16 / x^1.5 
-        // f4'(x)   = -24 / x^-2.5 
+        //          = 16 / x^1.5
+        // f4'(x)   = -24 / x^-2.5
         let x = Value::new(2.0, 1.0);
         let y = f1(f2(x));
 
