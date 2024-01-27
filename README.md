@@ -1,5 +1,5 @@
 # rad
-![build](https://github.com/hidal00p/rad/actions/workflows/build.yml/badge.svg)
+![build](https://github.com/hidal00p/rad/actions/workflows/build.yml/badge.svg) | ![test](https://github.com/hidal00p/rad/actions/workflows/test.yml/badge.svg)
 
 rad - Rust (based) Algorithmic Differentiation.
 
@@ -12,4 +12,4 @@ by using overloading.
 * [Wikipedia](https://en.wikipedia.org/wiki/Automatic_differentiation)
 
 ## To do
-...
+...
