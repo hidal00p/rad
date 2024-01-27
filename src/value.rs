@@ -202,12 +202,30 @@ mod test {
         a * x.pow(3.0)
     }
 
+    #[test]
+    fn test_differentiate_f1() {
+        let x = Value::new(2.0, 1.0);
+        let y = f1(x);
+
+        assert_eq!(y.value, 16.0);
+        assert_eq!(y.der, 24.0);
+    }
+
     fn f2(x: Value) -> Value {
         // f2(x)    = 2 / x^0.5
         // f2'(x)   = -1 / x^1.5
         let a = Value::new(2.0, Default::default());
 
         a / x.sqrt()
+    }
+
+    #[test]
+    fn test_differentiate_f2() {
+        let x = Value::new(4.0, 1.0);
+        let y = f2(x);
+
+        assert_eq!(y.value, 1.0);
+        assert_eq!(y.der, -0.125);
     }
 
     fn f3(x: Value) -> Value {
@@ -220,25 +238,7 @@ mod test {
     }
 
     #[test]
-    fn test_derivative1() {
-        let x = Value::new(2.0, 1.0);
-        let y = f1(x);
-
-        assert_eq!(y.value, 16.0);
-        assert_eq!(y.der, 24.0);
-    }
-
-    #[test]
-    fn test_derivative2() {
-        let x = Value::new(4.0, 1.0);
-        let y = f2(x);
-
-        assert_eq!(y.value, 1.0);
-        assert_eq!(y.der, -0.125);
-    }
-
-    #[test]
-    fn test_derivative3() {
+    fn test_differentiate_f3() {
         let x = Value::new(2.0, 1.0);
         let y = f3(x);
 
