@@ -196,7 +196,7 @@ mod test {
 
     fn f1(x: Value) -> Value {
         // f1(x)    = 2 * x^3
-        // df1/dx   = 6 * x^2
+        // f1'(x)   = 6 * x^2
         let a = Value::new(2.0, Default::default());
 
         a * x.pow(3.0)
@@ -204,15 +204,15 @@ mod test {
 
     fn f2(x: Value) -> Value {
         // f2(x)    = 2 / x^0.5
-        // df2/dx   = -1 / x^1.5
+        // f2'(x)   = -1 / x^1.5
         let a = Value::new(2.0, Default::default());
 
         a / x.sqrt()
     }
 
     fn f3(x: Value) -> Value {
-        // f(x)     = 0.5 * x^3 + 1 / x
-        // df3/dx   = 1.5 * x^2 - 1 / x^2
+        // f3(x)    = 0.5 * x^3 + 1 / x
+        // f3'(x)   = 1.5 * x^2 - 1 / x^2
         let a = Value::new(0.5, Default::default());
         let b = Value::new(1.0, Default::default());
 
