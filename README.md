@@ -1,4 +1,6 @@
 # rad
+![build](https://github.com/hidal00p/rad/actions/workflows/build.yml/badge.svg)
+
 rad - Rust (based) Algorithmic Differentiation.
 
 The essence of this project is to perform automatic computation of derivatives
