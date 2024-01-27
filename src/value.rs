@@ -228,21 +228,44 @@ mod test {
         assert_eq!(y.der, -0.125);
     }
 
-    fn f3(x: Value) -> Value {
-        // f3(x)    = 0.5 * x^3 + 1 / x
-        // f3'(x)   = 1.5 * x^2 - 1 / x^2
-        let a = Value::new(0.5, Default::default());
-        let b = Value::new(1.0, Default::default());
+    #[test]
+    fn test_differentiate_sum() {
+        let x = Value::new(4.0, 1.0);
+        let y = f1(x) + f2(x);
 
-        a * x.pow(3.0) + b / x
+        assert_eq!(y.value, 129.0);
+        assert_eq!(y.der, 95.875);
     }
 
     #[test]
-    fn test_differentiate_f3() {
-        let x = Value::new(2.0, 1.0);
-        let y = f3(x);
+    fn test_differentiate_subraction() {
+        let x = Value::new(4.0, 1.0);
+        let y = f1(x) - f2(x);
 
-        assert_eq!(y.value, 4.5);
-        assert_eq!(y.der, 5.75);
+        assert_eq!(y.value, 127.0);
+        assert_eq!(y.der, 96.125);
+    }
+    
+    #[test]
+    fn test_differentiate_product() {
+        // f3(x)    = f1(x) * f2(x) = 4 * x^2.5
+        // f3'(x)   = 10 * x^1.5
+        let x = Value::new(2.0, 1.0);
+        let y = f1(x) * f2(x);
+
+        assert_eq!(y.value, 22.627417);
+        assert_eq!(y.der, 28.28427);
+    }
+
+    #[test]
+    fn test_differentiate_chain() {
+        // f4(x)    = f1(f2(x)) = 2 * ( 2 / x^-0.5 )^3
+        //          = 16 / x^1.5 
+        // f4'(x)   = -24 / x^-2.5 
+        let x = Value::new(2.0, 1.0);
+        let y = f1(f2(x));
+
+        assert_eq!(y.value, 5.656854249);
+        assert_eq!(y.der, -4.242640687);
     }
 }
