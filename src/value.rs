@@ -1,4 +1,3 @@
-use std::default::Default;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /*
@@ -6,13 +5,17 @@ use std::ops::{Add, Div, Mul, Neg, Sub};
  * performs a derivative computation in the tangent mode.
  */
 
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy)]
 pub struct Value {
     pub value: f32,
     pub der: f32,
 }
 
 impl Value {
+    pub fn passive(value: f32) -> Self {
+        Value { value, der: 0.0 }
+    }
+
     pub fn new(value: f32, der: f32) -> Self {
         Value { value, der }
     }
@@ -131,7 +134,7 @@ mod test {
 
     #[test]
     fn test_default_value() {
-        let x = Value::new(5.0, Default::default());
+        let x = Value::passive(5.0);
 
         assert_eq!(x.value, 5.0);
         assert_eq!(x.der, 0.0);
@@ -195,7 +198,7 @@ mod test {
     fn f1(x: Value) -> Value {
         // f1(x)    = 2 * x^3
         // f1'(x)   = 6 * x^2
-        let a = Value::new(2.0, Default::default());
+        let a = Value::passive(2.0);
 
         a * x.pow(3.0)
     }
@@ -212,7 +215,7 @@ mod test {
     fn f2(x: Value) -> Value {
         // f2(x)    = 2 / x^0.5
         // f2'(x)   = -1 / x^1.5
-        let a = Value::new(2.0, Default::default());
+        let a = Value::passive(2.0);
 
         a / x.sqrt()
     }
