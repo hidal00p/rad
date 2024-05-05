@@ -23,6 +23,22 @@ impl Variable {
     }
 }
 
+impl Add for Variable {
+    type Output = Variable;
+
+    fn add(self, rhs: Variable) -> Self::Output {
+        todo!();
+    }
+}
+
+impl Sub for Variable {
+    type Output = Variable;
+
+    fn sub(self, rhs: Variable) -> Self::Output {
+        todo!();
+    }
+}
+
 impl Mul for Variable {
     type Output = Variable;
 
@@ -55,22 +71,6 @@ impl Mul for Variable {
             };
         }
         result
-    }
-}
-
-impl Add for Variable {
-    type Output = Variable;
-
-    fn add(self, rhs: Variable) -> Self::Output {
-        todo!();
-    }
-}
-
-impl Sub for Variable {
-    type Output = Variable;
-
-    fn sub(self, rhs: Variable) -> Self::Output {
-        todo!();
     }
 }
 
