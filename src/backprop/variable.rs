@@ -27,7 +27,31 @@ impl Add for Variable {
     type Output = Variable;
 
     fn add(self, rhs: Variable) -> Self::Output {
-        todo!();
+        let result = Variable::new(self.value + rhs.value, None);
+        println!("{} = {} + {}", result.value, self.value, rhs.value);
+
+        let inputs = vec![self.clone(), rhs.clone()];
+        let outputs = vec![result.clone()];
+
+        let propergate = move |dloss_doutputs: &Vec<Option<Variable>>| -> Vec<Variable> {
+            let dloss_dresult = dloss_doutputs.get(0).unwrap().clone().unwrap();
+
+            let dresult_dself = Variable::new(1.0, None);
+            let dresult_drhs = Variable::new(1.0, None);
+
+            let dloss_dself = dloss_dresult.clone() * dresult_dself;
+            let dloss_drhs = dloss_dresult * dresult_drhs;
+
+            let dloss_dinputs = vec![dloss_dself, dloss_drhs];
+            dloss_dinputs
+        };
+
+        unsafe {
+            if let Some(tape) = &mut GRADIENT_TAPE {
+                tape.add_entry(TapeEntry::new(inputs, outputs, Box::new(propergate)));
+            };
+        }
+        result
     }
 }
 
@@ -109,13 +133,13 @@ mod tests {
         assert_eq!(v0.name, "v0");
         assert_eq!(v1.name, "v1");
     }
-    
+
     #[test]
-    fn test_simle_add() {
-        let a = Variable::new(1.1, None);
-        let b = Variable::new(2.2, None);
+    fn test_simple_add() {
+        let a = Variable::new(2.0, None);
+        let b = Variable::new(3.0, None);
         let c = a + b;
-        assert_eq!(c.value, 3.3);
+        assert_eq!(c.value, 5.0);
     }
 
     #[test]
@@ -133,7 +157,7 @@ mod tests {
         let c = a * b;
         assert_eq!(c.value, 6.0);
     }
-    
+
     #[test]
     fn test_simple_div() {
         let a = Variable::new(12.0, None);
