@@ -72,6 +72,20 @@ mod tests {
     }
 
     #[test]
+    fn test_backprop_simple_sub() {
+        unsafe {
+            GRADIENT_TAPE = Some(GradientTape::new());
+        }
+        let a = Variable::new(3.0, Some('a'.to_string()));
+        let b = Variable::new(2.0, Some('b'.to_string()));
+        let loss = a.clone() - b.clone();
+        let da = grad(&loss, &vec![a]).get(0).unwrap().clone().unwrap();
+        let db = grad(&loss, &vec![b]).get(0).unwrap().clone().unwrap();
+        assert_eq!(da.value, 1.0);
+        assert_eq!(db.value, -1.0);
+    }
+
+    #[test]
     fn test_backprop_simple_mul() {
         unsafe {
             GRADIENT_TAPE = Some(GradientTape::new());
