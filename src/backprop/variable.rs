@@ -3,7 +3,7 @@ use super::tape::TapeEntry;
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::sync::atomic::Ordering;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Variable {
     pub value: f32,
     pub name: String,
