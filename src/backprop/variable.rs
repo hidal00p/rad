@@ -133,4 +133,12 @@ mod tests {
         let c = a * b;
         assert_eq!(c.value, 6.0);
     }
+    
+    #[test]
+    fn test_simple_div() {
+        let a = Variable::new(12.0, None);
+        let b = Variable::new(3.0, None);
+        let c = a / b;
+        assert_eq!(c.value, 4.0);
+    }
 }
