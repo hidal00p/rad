@@ -72,7 +72,7 @@ mod tests {
     }
 
     #[test]
-    fn test_mul_backprop() {
+    fn test_backprop_simple_mul() {
         unsafe {
             GRADIENT_TAPE = Some(GradientTape::new());
         }
