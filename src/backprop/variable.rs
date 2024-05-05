@@ -109,4 +109,12 @@ mod tests {
         assert_eq!(v0.name, "v0");
         assert_eq!(v1.name, "v1");
     }
+    
+    #[test]
+    fn test_simle_add() {
+        let a = Variable::new(1.1, None);
+        let b = Variable::new(2.2, None);
+        let c = a + b;
+        assert_eq!(c.value, 3.3);
+    }
 }
