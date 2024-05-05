@@ -125,4 +125,12 @@ mod tests {
         let c = b - a;
         assert_eq!(c.value, 2.0);
     }
+
+    #[test]
+    fn test_simple_mul() {
+        let a = Variable::new(2.0, None);
+        let b = Variable::new(3.0, None);
+        let c = a * b;
+        assert_eq!(c.value, 6.0);
+    }
 }
