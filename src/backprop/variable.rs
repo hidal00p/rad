@@ -110,7 +110,7 @@ impl Neg for Variable {
     type Output = Variable;
 
     fn neg(self) -> Self::Output {
-        todo!();
+        Variable::new(-1.0, None)  * self
     }
 }
 
