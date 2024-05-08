@@ -165,4 +165,11 @@ mod tests {
         let c = a / b;
         assert_eq!(c.value, 4.0);
     }
+    
+    #[test]
+    fn test_simple_neg() {
+        let a = Variable::new(3.0, None);
+        let b = -a;
+        assert_eq!(b.value, -3.0);
+    }
 }

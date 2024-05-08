@@ -115,6 +115,17 @@ mod tests {
     }
 
     #[test]
+    fn test_backprop_simple_neg() {
+        unsafe {
+            GRADIENT_TAPE = Some(GradientTape::new());
+        }
+        let a = Variable::new(3.0, None);
+        let loss = -a.clone();
+        let dloss_da = grad(&loss, &vec![a]).get(0).unwrap().clone().unwrap();
+        assert_eq!(dloss_da.value, -1.0);
+    }
+
+    #[test]
     fn test_backprop_zero_grad() {
         unsafe {
             GRADIENT_TAPE = Some(GradientTape::new());
