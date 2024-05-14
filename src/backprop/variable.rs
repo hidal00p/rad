@@ -23,6 +23,9 @@ impl Variable {
     }
 }
 
+unsafe impl Send for Variable {}
+unsafe impl Sync for Variable {}
+
 impl Add for Variable {
     type Output = Variable;
 
@@ -46,11 +49,9 @@ impl Add for Variable {
             dloss_dinputs
         };
 
-        unsafe {
-            if let Some(tape) = &mut GRADIENT_TAPE {
-                tape.add_entry(TapeEntry::new(inputs, outputs, Box::new(propergate)));
-            };
-        }
+        let tape_entry = TapeEntry::new(inputs, outputs, Box::new(propagate));
+        GRADIENT_TAPE.lock().unwrap().add_entry(tape_entry);
+
         result
     }
 }
@@ -89,11 +90,9 @@ impl Mul for Variable {
             dloss_dinputs
         };
 
-        unsafe {
-            if let Some(tape) = &mut GRADIENT_TAPE {
-                tape.add_entry(TapeEntry::new(inputs, outputs, Box::new(propagate)));
-            };
-        }
+        let tape_entry = TapeEntry::new(inputs, outputs, Box::new(propagate));
+        GRADIENT_TAPE.lock().unwrap().add_entry(tape_entry);
+
         result
     }
 }
@@ -110,7 +109,7 @@ impl Neg for Variable {
     type Output = Variable;
 
     fn neg(self) -> Self::Output {
-        Variable::new(-1.0, None)  * self
+        Variable::new(-1.0, None) * self
     }
 }
 
@@ -165,7 +164,7 @@ mod tests {
         let c = a / b;
         assert_eq!(c.value, 4.0);
     }
-    
+
     #[test]
     fn test_simple_neg() {
         let a = Variable::new(3.0, None);

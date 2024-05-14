@@ -22,25 +22,26 @@ fn grad(loss: &Variable, desired_results: &Vec<Variable>) -> Vec<Option<Variable
             .collect()
     }
 
-    println!("d{}:\n-----------", loss.name);
-    unsafe {
-        if let Some(tape) = &GRADIENT_TAPE {
-            for entry in tape.entries.iter().rev() {
-                let dloss_doutputs = gather_grad(&entry.outputs, &dloss_d);
-                if dloss_doutputs.iter().all(|x| x.is_none()) {
-                    continue;
-                }
+    let entries = {
+        let tape = GRADIENT_TAPE.lock().unwrap();
+        tape.entries.clone()
+    };
 
-                let dloss_dinputs = (entry.propagate)(&dloss_doutputs);
-                for (i, input) in entry.inputs.iter().enumerate() {
-                    let dloss_dinput = dloss_dinputs.get(i);
-                    if dloss_d.contains_key(&input.name) {
-                        let current = dloss_d.get_mut(&input.name).unwrap();
-                        current.value += dloss_dinput.unwrap().value;
-                    } else {
-                        dloss_d.insert(input.name.clone(), dloss_dinput.unwrap().clone());
-                    }
-                }
+    println!("d{}:\n-----------", loss.name);
+    for entry in &entries {
+        let dloss_doutputs = gather_grad(&entry.outputs, &dloss_d);
+        if dloss_doutputs.iter().all(|x| x.is_none()) {
+            continue;
+        }
+
+        let dloss_dinputs = (entry.propagate)(&dloss_doutputs);
+        for (i, input) in entry.inputs.iter().enumerate() {
+            let dloss_dinput = dloss_dinputs.get(i);
+            if dloss_d.contains_key(&input.name) {
+                let current = dloss_d.get_mut(&input.name).unwrap();
+                current.value += dloss_dinput.unwrap().value;
+            } else {
+                dloss_d.insert(input.name.clone(), dloss_dinput.unwrap().clone());
             }
         }
     }
@@ -58,9 +59,6 @@ mod tests {
 
     #[test]
     fn test_backprop_simple_add() {
-        unsafe {
-            GRADIENT_TAPE = Some(GradientTape::new());
-        }
         let a = Variable::new(3.0, Some('a'.to_string()));
         let b = Variable::new(2.0, Some('b'.to_string()));
         let loss = a.clone() + b.clone();
@@ -73,9 +71,6 @@ mod tests {
 
     #[test]
     fn test_backprop_simple_sub() {
-        unsafe {
-            GRADIENT_TAPE = Some(GradientTape::new());
-        }
         let a = Variable::new(3.0, Some('a'.to_string()));
         let b = Variable::new(2.0, Some('b'.to_string()));
         let loss = a.clone() - b.clone();
@@ -88,9 +83,6 @@ mod tests {
 
     #[test]
     fn test_backprop_simple_mul() {
-        unsafe {
-            GRADIENT_TAPE = Some(GradientTape::new());
-        }
         let a = Variable::new(3.0, Some('a'.to_string()));
         let b = Variable::new(2.0, Some('b'.to_string()));
         let loss = a.clone() * b.clone();
@@ -103,9 +95,6 @@ mod tests {
 
     #[test]
     fn test_backprop_simple_div() {
-        unsafe {
-            GRADIENT_TAPE = Some(GradientTape::new());
-        }
         let a = Variable::new(3.0, Some('a'.to_string()));
         let b = Variable::new(2.0, Some('b'.to_string()));
         let loss = a.clone() / b.clone();
@@ -118,9 +107,6 @@ mod tests {
 
     #[test]
     fn test_backprop_simple_neg() {
-        unsafe {
-            GRADIENT_TAPE = Some(GradientTape::new());
-        }
         let a = Variable::new(3.0, None);
         let loss = -a.clone();
         let dloss_d = grad(&loss, &vec![a]);
@@ -130,9 +116,6 @@ mod tests {
 
     #[test]
     fn test_backprop_zero_grad() {
-        unsafe {
-            GRADIENT_TAPE = Some(GradientTape::new());
-        }
         let a = Variable::new(3.0, Some('a'.to_string()));
         let b = Variable::new(2.0, Some('b'.to_string()));
         let loss = a.clone() * a.clone();

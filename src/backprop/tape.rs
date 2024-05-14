@@ -23,12 +23,35 @@ impl GradientTape {
     }
 }
 
-type GradientFunction = Box<dyn Fn(&Vec<Option<Variable>>) -> Vec<Variable>>;
+pub trait CloneableFn: Fn(&Vec<Option<Variable>>) -> Vec<Variable> + Send + Sync {
+    fn clone_box(&self) -> Box<dyn CloneableFn>;
+}
+
+impl<T> CloneableFn for T
+where
+    T: 'static + Fn(&Vec<Option<Variable>>) -> Vec<Variable> + Send + Sync + Clone,
+{
+    fn clone_box(&self) -> Box<dyn CloneableFn> {
+        Box::new(self.clone())
+    }
+}
+
+type GradientFunction = Box<dyn CloneableFn>;
 
 pub struct TapeEntry {
     pub inputs: Vec<Variable>,
     pub outputs: Vec<Variable>,
     pub propagate: GradientFunction,
+}
+
+impl Clone for TapeEntry {
+    fn clone(&self) -> Self {
+        TapeEntry {
+            inputs: self.inputs.clone(),
+            outputs: self.outputs.clone(),
+            propagate: self.propagate.clone_box(), // This needs a workaround
+        }
+    }
 }
 
 impl TapeEntry {
