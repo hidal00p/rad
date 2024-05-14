@@ -36,7 +36,7 @@ impl Add for Variable {
         let inputs = vec![self.clone(), rhs.clone()];
         let outputs = vec![result.clone()];
 
-        let propergate = move |dloss_doutputs: &Vec<Option<Variable>>| -> Vec<Variable> {
+        let propagate = move |dloss_doutputs: &Vec<Option<Variable>>| -> Vec<Variable> {
             let dloss_dresult = dloss_doutputs.get(0).unwrap().clone().unwrap();
 
             let dresult_dself = Variable::new(1.0, None);
