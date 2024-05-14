@@ -60,7 +60,29 @@ impl Sub for Variable {
     type Output = Variable;
 
     fn sub(self, rhs: Variable) -> Self::Output {
-        todo!();
+        let result = Variable::new(self.value - rhs.value, None);
+        println!("{} = {} - {} = {} - {} = {}", result.name, self.name, rhs.name, self.value, rhs.value, result.value);
+
+        let inputs = vec![self.clone(), rhs.clone()];
+        let outputs = vec![result.clone()];
+
+        let propagate = move |dloss_doutputs: &Vec<Option<Variable>>| -> Vec<Variable> {
+            let dloss_dresult = dloss_doutputs.get(0).unwrap().clone().unwrap();
+
+            let dresult_dself = Variable::new(1.0, None);
+            let dresult_drhs = Variable::new(-1.0, None);
+
+            let dloss_dself = dloss_dresult.clone() * dresult_dself;
+            let dloss_drhs = dloss_dresult * dresult_drhs;
+
+            let dloss_dinputs = vec![dloss_dself, dloss_drhs];
+            dloss_dinputs
+        };
+
+        let tape_entry = TapeEntry::new(inputs, outputs, Box::new(propagate));
+        GRADIENT_TAPE.lock().unwrap().add_entry(tape_entry);
+
+        result
     }
 }
 
