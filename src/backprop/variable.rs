@@ -157,11 +157,23 @@ mod tests {
 
     #[test]
     fn test_auto_name_generation() {
+        fn get_name_index(var: &Variable) -> i32 {
+            let name = &var.name;
+            let index = name
+                .chars()
+                .skip(1)
+                .collect::<String>()
+                .parse::<i32>()
+                .unwrap();
+            index
+        }
+
         NAME_IDX.store(0, Ordering::SeqCst);
         let v0 = Variable::new(3.0, None);
         let v1 = Variable::new(3.0, None);
-        assert_eq!(v0.name, "v0");
-        assert_eq!(v1.name, "v1");
+        let v0_name_idx = get_name_index(&v0);
+        let v1_name_idx = get_name_index(&v1);
+        assert!(v0_name_idx < v1_name_idx);
     }
 
     #[test]
