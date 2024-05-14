@@ -31,7 +31,7 @@ impl Add for Variable {
 
     fn add(self, rhs: Variable) -> Self::Output {
         let result = Variable::new(self.value + rhs.value, None);
-        println!("{} = {} + {}", result.value, self.value, rhs.value);
+        println!("{} = {} + {} = {} + {} = {}", result.name, self.name, rhs.name, self.value, rhs.value, result.value);
 
         let inputs = vec![self.clone(), rhs.clone()];
         let outputs = vec![result.clone()];
@@ -69,7 +69,7 @@ impl Mul for Variable {
 
     fn mul(self, rhs: Variable) -> Self::Output {
         let result = Variable::new(self.value * rhs.value, None);
-        println!("{} = {} * {}", self.value, rhs.value, result.value);
+        println!("{} = {} * {} = {} * {} = {}", result.name, self.name, rhs.name, self.value, rhs.value, result.value);
 
         let inputs = vec![self.clone(), rhs.clone()];
         let outputs = vec![result.clone()];
