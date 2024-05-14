@@ -1,5 +1,4 @@
 use super::globals::GRADIENT_TAPE;
-use super::tape::GradientTape;
 use super::variable::Variable;
 use std::collections::HashMap;
 
