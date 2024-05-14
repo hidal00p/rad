@@ -145,7 +145,7 @@ mod tests {
     fn test_simple_sub() {
         let a = Variable::new(2.5, None);
         let b = Variable::new(0.5, None);
-        let c = b - a;
+        let c = a - b;
         assert_eq!(c.value, 2.0);
     }
 
