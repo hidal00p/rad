@@ -1,11 +1,11 @@
-mod value;
 mod backprop;
+mod value;
 
 use value::Value;
 
 fn f(x: Value) -> Value {
-    let a = Value::new(3.0, 0.0); // Passive variable
-    let b = Value::new(2.0, 0.0); // Passive variable
+    let a = Value::passive(3.0); // Passive variable
+    let b = Value::passive(2.0); // Passive variable
 
     // purely copying
     a * x * x + b / x
