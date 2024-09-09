@@ -51,15 +51,6 @@ impl Add for Value {
     }
 }
 
-impl Add<&mut Value> for &mut Value {
-    type Output = Value;
-    fn add(self, rhs: &mut Value) -> Self::Output {
-        let value = self.value + rhs.value;
-        let der = self.der + rhs.der;
-        Value { value, der }
-    }
-}
-
 impl Sub for Value {
     type Output = Value;
 
@@ -67,14 +58,6 @@ impl Sub for Value {
         let value = self.value - rhs.value;
         let der = self.der - rhs.der;
         Value { value, der }
-    }
-}
-
-impl Sub<&mut Value> for &mut Value {
-    type Output = Value;
-    fn sub(self, rhs: &mut Value) -> Self::Output {
-        rhs.value = -1.0 * rhs.value;
-        self + rhs
     }
 }
 
@@ -88,30 +71,10 @@ impl Mul for Value {
     }
 }
 
-impl Mul<&mut Value> for &mut Value {
-    type Output = Value;
-
-    fn mul(self, rhs: &mut Value) -> Self::Output {
-        let value = self.value * rhs.value;
-        let der = rhs.value * self.der + self.value * rhs.der;
-        Value { value, der }
-    }
-}
-
 impl Div for Value {
     type Output = Value;
 
     fn div(self, mut rhs: Value) -> Self::Output {
-        rhs.der = -rhs.der / rhs.value / rhs.value;
-        rhs.value = 1.0 / rhs.value;
-        self * rhs
-    }
-}
-
-impl Div<&mut Value> for &mut Value {
-    type Output = Value;
-
-    fn div(self, rhs: &mut Value) -> Self::Output {
         rhs.der = -rhs.der / rhs.value / rhs.value;
         rhs.value = 1.0 / rhs.value;
         self * rhs
